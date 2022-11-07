@@ -39,5 +39,4 @@ public class SortingTagsTask {
                                 ,(a, b) -> a,
                                 LinkedHashMap::new));
     }
-    // I think there are more elegant solutions, so can you give me some advice?
 }

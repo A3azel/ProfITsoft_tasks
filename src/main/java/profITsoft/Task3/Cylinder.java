@@ -2,8 +2,7 @@ package profITsoft.Task3;
 
 import java.util.Objects;
 
-public class Cylinder implements Shape{
-    public String name;
+public class Cylinder extends Shape{
     public double radius;
     public double high;
 

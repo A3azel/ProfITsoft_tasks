@@ -9,7 +9,7 @@ public class SortingShapeTask {
     public static List<Shape> sortShape(List<Shape> shapeList){
         return shapeList
                 .stream()
-                .sorted(Comparator.comparing(Shape::area))
+                .sorted(Comparator.comparingDouble(Shape::area).thenComparing(o -> o.name))
                 .collect(Collectors.toList());
     }
 }

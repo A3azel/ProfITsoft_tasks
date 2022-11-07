@@ -2,8 +2,7 @@ package profITsoft.Task3;
 
 import java.util.Objects;
 
-public class Cube implements Shape{
-    public String name;
+public class Cube extends Shape{
     public double high;
     public double length;
     public double width;

@@ -2,8 +2,7 @@ package profITsoft.Task3;
 
 import java.util.Objects;
 
-public class Sphere implements Shape{
-    public String name;
+public class Sphere extends Shape{
     public double radius;
 
     public Sphere(String name, double radius) {
@@ -26,7 +25,7 @@ public class Sphere implements Shape{
 
     @Override
     public double area() {
-        return 4.0/3.0*Math.PI*Math.pow(radius,3);
+        return (4.0/3.0)*Math.PI*Math.pow(radius,3);
     }
 
     @Override
