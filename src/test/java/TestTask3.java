@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import profITsoft.Task3.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TestTask3 {
@@ -43,6 +44,13 @@ public class TestTask3 {
     public void testShapeListSize(){
         List<Shape> afterSorting = List.of(cube2, cylinder2, cylinder3, cube3, sphere1, cube1, cylinder1, sphere3, sphere2);
         Assertions.assertEquals(SortingShapeTask.sortShape(beforeSorting).size(),afterSorting.size());
+    }
+
+    @Test
+    public void testEmptyList(){
+        List<Shape> emptyList = new ArrayList<>();
+        List<Shape> afterSorting = new ArrayList<>();
+        Assertions.assertEquals(SortingShapeTask.sortShape(emptyList),afterSorting);
     }
 
     @Test

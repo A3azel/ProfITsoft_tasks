@@ -92,6 +92,14 @@ public class TestTask2 {
     }
 
     @Test
+    public void testEmptyString(){
+        List<String> text1 = List.of("");
+        Map<String,Integer> correctResult = new LinkedHashMap<>();
+        Map<String,Integer> result1 = SortingTagsTask.getMostPopularTags(text1);
+        Assertions.assertEquals(result1,correctResult);
+    }
+
+    @Test
     public void testNULL() throws NullPointerException{
         Assertions.assertThrows(NullPointerException.class, () -> SortingTagsTask.getMostPopularTags(null));
     }

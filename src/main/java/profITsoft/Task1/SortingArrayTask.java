@@ -17,13 +17,6 @@ public class SortingArrayTask {
 
     // I used quicksort here
     public static int[] vanillaSorting(int[] mass){
-
-        // if using streams
-        /*int[] filterMass = Arrays.stream(mass)
-                .filter(x -> x>=0)
-                .toArray();*/
-        // or
-
         int n=0;
         int[] temporaryArray = new int[mass.length];
         for (int i = 0; i < mass.length; i++) {
