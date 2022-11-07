@@ -26,7 +26,6 @@ public class SortingArrayTask {
             }
         }
         int[] filterMass = Arrays.copyOf(temporaryArray,n);
-
         return quickSort(filterMass,0, filterMass.length-1);
     }
 
@@ -38,7 +37,6 @@ public class SortingArrayTask {
         if(minElement>=maxElement){
             return mass;
         }
-
         int middlePosition = minElement + (maxElement-minElement)/2;
         int middleValue = mass[middlePosition];
 
@@ -60,15 +58,12 @@ public class SortingArrayTask {
                 finish--;
             }
         }
-
         if (minElement<finish){
             quickSort(mass,minElement,finish);
         }
-
         if(maxElement>start){
             quickSort(mass,start,maxElement);
         }
-
         return mass;
     }
 }
