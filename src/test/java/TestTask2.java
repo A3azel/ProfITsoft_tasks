@@ -100,8 +100,8 @@ public class TestTask2 {
     }
 
     @Test
-    public void testNULL() throws NullPointerException{
-        Assertions.assertThrows(NullPointerException.class, () -> SortingTagsTask.getMostPopularTags(null));
+    public void testNULL() {
+        Assertions.assertThrows(IllegalArgumentException.class, () -> SortingTagsTask.getMostPopularTags(null));
     }
 
 }

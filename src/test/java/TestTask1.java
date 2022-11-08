@@ -3,6 +3,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import profITsoft.Task1.SortingArrayTask;
+;
 
 public class TestTask1 {
 
@@ -58,13 +59,13 @@ public class TestTask1 {
     }
 
     @Test
-    public void testLambdaSortingWithNULL() throws NullPointerException{
-        Assertions.assertThrows(NullPointerException.class,() -> SortingArrayTask.sortMassWithStream(testNull));
+    public void testLambdaSortingWithNULL(){
+        Assertions.assertThrows(IllegalArgumentException.class,() -> SortingArrayTask.sortMassWithStream(testNull));
     }
 
     @Test
-    public void testVanillaWithNULL() throws NullPointerException{
-        Assertions.assertThrows(NullPointerException.class, () -> SortingArrayTask.vanillaSorting(testNull));
+    public void testVanillaWithNULL(){
+        Assertions.assertThrows(IllegalArgumentException.class, () -> SortingArrayTask.vanillaSorting(testNull));
     }
 
 }

@@ -68,8 +68,8 @@ public class TestTask3 {
     }
 
     @Test
-    public void testShapeSortingWithNULL() throws NullPointerException{
-        Assertions.assertThrows(NullPointerException.class, () -> SortingShapeTask.sortShape(null));
+    public void testShapeSortingWithNULL(){
+        Assertions.assertThrows(IllegalArgumentException.class, () -> SortingShapeTask.sortShape(null));
     }
 
 }

@@ -7,22 +7,26 @@ import java.util.stream.Collectors;
 
 public class SortingTagsTask {
     public static final String FIND_TAG = "#\\w*";
+    //public static final String FIND_TAG = "([\\s.,$!@%^&*()\\-+=]+|\\A)#\\w*";
 
     public static Map<String,Integer> getMostPopularTags(List<String> stringList){
         // find all unique tags in the every sentence and put them to map
+        if(stringList==null){
+            throw new IllegalArgumentException("passed null instead List<String>");
+        }
         Map<String,Integer> resultMap = new HashMap<>();
-        for (int i = 0; i < stringList.size(); i++) {
+        for (String value : stringList) {
             List<String> tagsList = new ArrayList<>();
             Pattern pattern = Pattern.compile(FIND_TAG);
-            Matcher matcher = pattern.matcher(stringList.get(i));
-            while (matcher.find()){
-                String finderTag =  matcher.group();
-                if(!tagsList.contains(finderTag)){
+            Matcher matcher = pattern.matcher(value);
+            while (matcher.find()) {
+                String finderTag = matcher.group();
+                if (!tagsList.contains(finderTag)) {
                     tagsList.add(finderTag);
                 }
             }
-            for (int j = 0; j < tagsList.size(); j++) {
-                resultMap.put(tagsList.get(j), resultMap.containsKey(tagsList.get(j)) ? resultMap.get((tagsList.get(j))) + 1 : 1);
+            for (String s : tagsList) {
+                resultMap.put(s, resultMap.containsKey(s) ? resultMap.get(s) + 1 : 1);
             }
         }
         // sorted map by value

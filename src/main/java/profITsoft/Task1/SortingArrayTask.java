@@ -2,12 +2,14 @@ package profITsoft.Task1;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Optional;
 
 public class SortingArrayTask {
 
     // used Java 8 stream API
     public static int[] sortMassWithStream(int[] mass){
-        return Arrays.stream(mass)
+        return Arrays.stream(Optional.ofNullable(mass)
+                .orElseThrow(()->new IllegalArgumentException("passed null instead array")))
                 .boxed()
                 .filter(m -> m>=0)
                 .sorted(Collections.reverseOrder())
@@ -17,11 +19,14 @@ public class SortingArrayTask {
 
     // I used quicksort here
     public static int[] vanillaSorting(int[] mass){
+        if(mass==null){
+            throw new IllegalArgumentException("passed null instead array");
+        }
         int n=0;
         int[] temporaryArray = new int[mass.length];
-        for (int i = 0; i < mass.length; i++) {
-            if(mass[i]>=0){
-                temporaryArray[n] = mass[i];
+        for (int j : mass) {
+            if (j >= 0) {
+                temporaryArray[n] = j;
                 n++;
             }
         }
