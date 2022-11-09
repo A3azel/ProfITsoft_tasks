@@ -28,10 +28,8 @@ public class SortingTagsTask {
                 String finderTag = matcher.group().replaceAll("[\\s.,$!@%^&*()\\-+=]","");
                 if (!tagsList.contains(finderTag)) {
                     tagsList.add(finderTag);
+                    resultMap.put(finderTag, resultMap.containsKey(finderTag) ? resultMap.get(finderTag) + 1 : 1);
                 }
-            }
-            for (String s : tagsList) {
-                resultMap.put(s, resultMap.containsKey(s) ? resultMap.get(s) + 1 : 1);
             }
         }
         // sorted map by value and then by key
@@ -44,7 +42,7 @@ public class SortingTagsTask {
                 .collect(Collectors
                         .toMap(Map.Entry::getKey
                                 ,Map.Entry::getValue
-                                ,(a, b) -> a,
-                                LinkedHashMap::new));
+                                ,(a, b) -> a
+                                , LinkedHashMap::new));
     }
 }
