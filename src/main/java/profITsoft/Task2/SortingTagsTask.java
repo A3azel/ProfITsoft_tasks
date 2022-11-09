@@ -10,7 +10,7 @@ public class SortingTagsTask {
     * #tag - tag
     * aeq#tag - not tag
     * #tag1&#tag2 - two tags
-    * qwerty_#tag - tag
+    * qwerty-#tag - tag
     * */
     public static final String FIND_TAG = "([\\s.,$!@%^&*()\\-+=]+|\\A)#\\w*";
 
@@ -34,7 +34,7 @@ public class SortingTagsTask {
                 resultMap.put(s, resultMap.containsKey(s) ? resultMap.get(s) + 1 : 1);
             }
         }
-        // sorted map by value
+        // sorted map by value and then by key
         return resultMap.entrySet()
                 .stream()
                 .sorted(Collections
