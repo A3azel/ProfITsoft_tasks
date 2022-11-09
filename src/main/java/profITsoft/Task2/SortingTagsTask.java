@@ -6,7 +6,13 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class SortingTagsTask {
-    public static final String FIND_TAG = "#\\w*";
+    /*
+    * #tag - tag
+    * aeq#tag - not tag
+    * #tag1&#tag2 - two tags
+    * qwerty_#tag - tag
+    * */
+    public static final String FIND_TAG = "([\\s.,$!@%^&*()\\-+=]+|\\A)#\\w*";
 
     public static Map<String,Integer> getMostPopularTags(List<String> stringList){
         // find all unique tags in the every sentence and put them to map
@@ -19,7 +25,7 @@ public class SortingTagsTask {
             Pattern pattern = Pattern.compile(FIND_TAG);
             Matcher matcher = pattern.matcher(value);
             while (matcher.find()) {
-                String finderTag = matcher.group();
+                String finderTag = matcher.group().replaceAll("[\\s.,$!@%^&*()\\-+=]","");
                 if (!tagsList.contains(finderTag)) {
                     tagsList.add(finderTag);
                 }

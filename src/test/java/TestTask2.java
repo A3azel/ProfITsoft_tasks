@@ -92,6 +92,25 @@ public class TestTask2 {
     }
 
     @Test
+    public void testWithNotValidTags(){
+        List<String> text = List.of("qwerty#tag1, #tag2&#tag3 &#tag2",
+                "text#tag1 text#tag2",
+                "#tag3-#tag4 #tag1",
+                "#tag5 #tag3!#tag2!#tag5");
+        Map<String,Integer> correctResult = new LinkedHashMap<>();
+        correctResult.put("#tag3",3);
+        correctResult.put("#tag2",2);
+        correctResult.put("#tag1",1);
+        correctResult.put("#tag4",1);
+        correctResult.put("#tag5",1);
+        Map<String,Integer> result = SortingTagsTask.getMostPopularTags(text);
+        System.out.println("testLessThenFiveTags result map");
+        result
+                .forEach((k,v)-> System.out.println("Tag: "+ k + " count: " + v));
+        Assertions.assertEquals(result,correctResult);
+    }
+
+    @Test
     public void testEmptyString(){
         List<String> text1 = List.of("");
         Map<String,Integer> correctResult = new LinkedHashMap<>();
