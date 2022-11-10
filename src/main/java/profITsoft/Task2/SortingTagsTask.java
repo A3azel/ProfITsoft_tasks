@@ -1,7 +1,8 @@
 package profITsoft.Task2;
 
 import java.util.*;
-import java.util.regex.Matcher;
+import java.util.function.Function;
+import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -15,6 +16,35 @@ public class SortingTagsTask {
     public static final String FIND_TAG = "([\\s.,$!@%^&*()\\-+=]+|\\A)#\\w*";
 
     public static Map<String,Integer> getMostPopularTags(List<String> stringList){
+        if(stringList==null){
+            throw new IllegalArgumentException("passed null instead List<String>");
+        }
+        List<String> strings = new ArrayList<>();
+        for (String s : stringList){
+            Pattern.compile(FIND_TAG).matcher(s)
+                    .results()
+                    .map(MatchResult::group)
+                    .map(str -> str.replaceAll("[\\s.,$!@%^&*()\\-+=]",""))
+                    .distinct()
+                    .forEach(strings::add);
+        }
+        return strings.stream()
+                .collect(Collectors.toMap(Function.identity(),c->1,(a,b) -> a+=1))
+                .entrySet()
+                .stream()
+                .sorted(Collections
+                        .reverseOrder(Map.Entry.<String, Integer>comparingByValue())
+                        .thenComparing(Map.Entry.comparingByKey()))
+                .limit(5)
+                .collect(Collectors.toMap(Map.Entry::getKey
+                        ,Map.Entry::getValue
+                        ,(a, b) -> a
+                        , LinkedHashMap::new));
+    }
+
+    // or this solution
+
+    /*public static Map<String,Integer> getMostPopularTags(List<String> stringList){
         // find all unique tags in the every sentence and put them to map
         if(stringList==null){
             throw new IllegalArgumentException("passed null instead List<String>");
@@ -44,5 +74,5 @@ public class SortingTagsTask {
                                 ,Map.Entry::getValue
                                 ,(a, b) -> a
                                 , LinkedHashMap::new));
-    }
+    }*/
 }
