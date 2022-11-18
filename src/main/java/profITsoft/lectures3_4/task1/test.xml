@@ -6,6 +6,6 @@
         name = "Іван Франко"
         />
     <person name="Леся Українка"
-
+       
         birthData="13.02.1871" />
 </persons>

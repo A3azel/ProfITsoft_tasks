@@ -17,20 +17,22 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class ViolationConvertor {
     private static final String DEFAULT_OUTPUT_XML_PATH = "src/main/java/profITsoft/lectures3_4/task2/statisticsXMLs/";
     private static final String XML_SUFFIX = ".xml";
 
+    private static final String DATE_FORMAT="yyyy-MM-dd HH:mm:ss";
     private static final String ROOT_ELEMENT = "statistics";
     private static final String VIOLATION_ELEMENT = "violation";
     private static final String TYPE_ATTRIBUTE = "type";
@@ -38,7 +40,7 @@ public class ViolationConvertor {
 
     public static void parseJSON(String dirPath, String outputXMLFileName){
         Gson gson = new GsonBuilder()
-                .setDateFormat("yyyy-MM-dd HH:mm:ss")
+                .setDateFormat(DATE_FORMAT)
                 .create();
         List<Violation> violationList = new ArrayList<>();
 
@@ -49,8 +51,9 @@ public class ViolationConvertor {
             return;
         }
         for(File jsonFile: filesList){
-            try(FileReader fileReader = new FileReader(jsonFile)){
-                Violation violation = gson.fromJson(fileReader,Violation.class);
+            // I'm using BufferedReader here because it has a default 8 KB buffer
+            try(BufferedReader bufferedReader = new BufferedReader(new FileReader(jsonFile))){
+                Violation violation = gson.fromJson(bufferedReader,Violation.class);
                 if(violation!=null){
                     violationList.add(violation);
                 }
@@ -58,7 +61,7 @@ public class ViolationConvertor {
                 fileNotFoundException.printStackTrace();
             }
         }
-        List<ViolationStatistics> statisticsList = sortViolationStatistics(violationList);
+        List<ViolationStatistics> statisticsList = creatingAndSortingStatistics(violationList);
         try {
             createXML(statisticsList,outputXMLFileName);
         } catch (ParserConfigurationException | TransformerException e) {
@@ -66,15 +69,18 @@ public class ViolationConvertor {
         }
     }
 
-    private static List<ViolationStatistics> sortViolationStatistics(List<Violation> violationList){
-        /*Map<String,BigDecimal> map = violationList.stream()
+    private static List<ViolationStatistics> creatingAndSortingStatistics(List<Violation> violationList){
+        return violationList.stream()
                 .map(a -> new ViolationStatistics(a.getViolationType(),a.getFineAmount()))
                 .collect(Collectors.toList())
                 .stream()
-                .collect(Collectors.groupingBy(ViolationStatistics::getViolationType,Collectors.summingDouble(ViolationStatistics::getTotalAmountOfFines)));
-*/
-        return violationList.stream()
-                .map(a -> new ViolationStatistics(a.getViolationType(),a.getFineAmount()))
+                .collect(Collectors.groupingBy(ViolationStatistics::getViolationType,Collectors.reducing(BigDecimal.ZERO, ViolationStatistics::getTotalAmountOfFines, BigDecimal::add)))
+                .entrySet()
+                .stream()
+                .sorted(Collections
+                        .reverseOrder(Map.Entry.<String, BigDecimal>comparingByValue())
+                        .thenComparing(Map.Entry.comparingByKey()))
+                .map(x -> new ViolationStatistics(x.getKey(),x.getValue()))
                 .collect(Collectors.toList());
     }
 
@@ -92,8 +98,8 @@ public class ViolationConvertor {
             violationType.setValue(statistics.getViolationType());
             Attr totalAmountOfFines = doc.createAttribute(FINES_ATTRIBUTE);
             totalAmountOfFines.setValue(String.valueOf(statistics.getTotalAmountOfFines()));
-            violation.setAttributeNode(violationType);
             violation.setAttributeNode(totalAmountOfFines);
+            violation.setAttributeNode(violationType);
             rootElement.appendChild(violation);
         }
 
