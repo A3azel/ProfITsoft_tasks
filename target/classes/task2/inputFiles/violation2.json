@@ -1,0 +1,24 @@
+[
+  {
+    "date_time": "2021-03-08 10:13:53",
+    "first_name": "User1",
+    "last_name": "User1",
+    "type": "SPEEDING",
+    "fine_amount": 1340.00
+  },
+  {
+    "date_time": "2021-07-23 22:11:53",
+    "first_name": "User1",
+    "last_name": "User1",
+    "type": "SPEEDING",
+    "fine_amount": 3680.00
+  },
+  {
+    "date_time": "2021-11-10 13:29:24",
+    "first_name": "User1",
+    "last_name": "User1",
+    "type": "SPEEDING",
+    "fine_amount": 14000.00
+  }
+]
+

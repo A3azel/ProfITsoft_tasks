@@ -1,0 +1,26 @@
+[
+    {
+      "date_time": "2021-11-23 22:33:19",
+      "first_name": "User2",
+      "last_name": "User2",
+      "type": "DRIVING_UNDER_ALCOHOL",
+      "fine_amount": 20000.00
+    },
+    {
+      "date_time": "2020-04-17 10:13:53",
+      "first_name": "User2",
+      "last_name": "User2",
+      "type": "DRIVING_UNDER_ALCOHOL",
+      "fine_amount": 30000.00
+    },
+    {
+      "date_time": "2020-10-08 10:13:53",
+      "first_name": "User2",
+      "last_name": "User2",
+      "type": "TEASED",
+      "fine_amount": 850.00
+    }
+]
+
+
+

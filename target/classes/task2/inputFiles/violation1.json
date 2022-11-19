@@ -1,0 +1,23 @@
+[
+  {
+    "date_time": "2020-05-05 15:39:03",
+    "first_name": "Ivan",
+    "last_name": "Ivanov",
+    "type": "SPEEDING",
+    "fine_amount": 340.00
+  },
+  {
+    "date_time": "2020-07-11 14:14:14",
+    "first_name": "Ivan",
+    "last_name": "Ivanov",
+    "type": "VANDALISM",
+    "fine_amount": 2500.50
+  },
+  {
+    "date_time": "2020-05-05 15:39:03",
+    "first_name": "Ivan",
+    "last_name": "Ivanov",
+    "type": "DRIVING_UNDER_ALCOHOL",
+    "fine_amount": 15000.00
+  }
+]

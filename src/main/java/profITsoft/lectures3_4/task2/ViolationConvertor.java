@@ -3,6 +3,7 @@ package profITsoft.lectures3_4.task2;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -21,6 +22,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,7 +31,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class ViolationConvertor {
-    private static final String DEFAULT_OUTPUT_XML_PATH = "src/main/java/profITsoft/lectures3_4/task2/statisticsXMLs/";
+    private static final String DEFAULT_OUTPUT_XML_PATH = "src/main/resources/task2/outputFiles/";
     private static final String XML_SUFFIX = ".xml";
 
     private static final String DATE_FORMAT="yyyy-MM-dd HH:mm:ss";
@@ -42,7 +44,7 @@ public class ViolationConvertor {
         Gson gson = new GsonBuilder()
                 .setDateFormat(DATE_FORMAT)
                 .create();
-        List<Violation> violationList = new ArrayList<>();
+        List<Violation> allViolations = new ArrayList<>();
 
         File jsonDirectory = new File(dirPath);
         File[] filesList = jsonDirectory.listFiles();
@@ -51,17 +53,17 @@ public class ViolationConvertor {
             return;
         }
         for(File jsonFile: filesList){
-            // I'm using BufferedReader here because it has a default 8 KB buffer
             try(BufferedReader bufferedReader = new BufferedReader(new FileReader(jsonFile))){
-                Violation violation = gson.fromJson(bufferedReader,Violation.class);
-                if(violation!=null){
-                    violationList.add(violation);
+                Type founderListType = new TypeToken<ArrayList<Violation>>(){}.getType();
+                List<Violation> violationList = gson.fromJson(bufferedReader, founderListType);
+                if(violationList!=null){
+                    allViolations.addAll(violationList);
                 }
             } catch (IOException fileNotFoundException) {
                 fileNotFoundException.printStackTrace();
             }
         }
-        List<ViolationStatistics> statisticsList = creatingAndSortingStatistics(violationList);
+        List<ViolationStatistics> statisticsList = creatingAndSortingStatistics(allViolations);
         try {
             createXML(statisticsList,outputXMLFileName);
         } catch (ParserConfigurationException | TransformerException e) {

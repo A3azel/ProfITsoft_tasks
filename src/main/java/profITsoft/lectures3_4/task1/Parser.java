@@ -9,7 +9,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Parser {
-    private static final String DEFAULT_OUTPUT_FILE_PATH = "src/main/java/profITsoft/lectures3_4/task1/";
+    private static final String DEFAULT_OUTPUT_FILE_PATH = "src/main/resources/task1/outputFiles/";
     private static final String XML_SUFFIX = ".xml";
     // finding person tags with all spaces in front of it
     private static final String XML_REGEX = "\\s[\\s\\S]+?/>";
@@ -21,9 +21,10 @@ public class Parser {
     private static final String XML_SURNAME = "\\ssurname\\s?=\\s?\"(\\S*\")";
 
     public static void parseXML(String inputFilePath, String outputFileName){
+        // I used bufferedReader because As I know it has built in buffer
         // BufferedReader constructor with buffer
         try(BufferedReader bufferedReader = new BufferedReader(new FileReader(inputFilePath),16384 /*16 KB*/);
-            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(DEFAULT_OUTPUT_FILE_PATH + outputFileName + XML_SUFFIX))) {
+            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(DEFAULT_OUTPUT_FILE_PATH + outputFileName + XML_SUFFIX),16384)) {
             StringBuilder inputXMLString = new StringBuilder();
             StringBuilder outputXMLString = new StringBuilder();
             String xmlLine;
