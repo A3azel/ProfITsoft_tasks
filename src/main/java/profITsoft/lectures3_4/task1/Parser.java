@@ -21,10 +21,10 @@ public class Parser {
     private static final String XML_SURNAME = "\\ssurname\\s?=\\s?\"(\\S*\")";
 
     public static void parseXML(String inputFilePath, String outputFileName){
-        // I used bufferedReader because As I know it has built in buffer
         // BufferedReader constructor with buffer
         try(BufferedReader bufferedReader = new BufferedReader(new FileReader(inputFilePath),16384 /*16 KB*/);
-            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(DEFAULT_OUTPUT_FILE_PATH + outputFileName + XML_SUFFIX),16384)) {
+            //need to be uncommented true for using second solution
+            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(DEFAULT_OUTPUT_FILE_PATH + outputFileName + XML_SUFFIX/*,true*/),16384)) {
             StringBuilder inputXMLString = new StringBuilder();
             StringBuilder outputXMLString = new StringBuilder();
             String xmlLine;
@@ -49,6 +49,29 @@ public class Parser {
             }
             outputXMLString.append("\n").append("</persons>");
             bufferedWriter.write(outputXMLString.toString());
+
+            //                          In this solution I write every <person> separated
+            // This I use only inputXMLString
+            /*while((xmlLine=bufferedReader.readLine())!=null){
+                inputXMLString.append(xmlLine).append("\n");
+                Pattern pattern = Pattern.compile(XML_REGEX);
+                Matcher matcher = pattern.matcher(inputXMLString.toString());
+
+                while (matcher.find()){
+                    Matcher nameMatcher = Pattern.compile(XML_NAME).matcher(inputXMLString);
+                    Matcher surnameMatcher = Pattern.compile(XML_SURNAME).matcher(inputXMLString);
+                    if(nameMatcher.find() && surnameMatcher.find()) {
+                        String name = nameMatcher.group(1);
+                        String surname = surnameMatcher.group(1);
+                        String newNameTag = name + " " + surname;
+                        String changedParsonTag = inputXMLString.toString().replaceAll(XML_SURNAME,"").replaceAll(XML_NAME_FOR_REPLAYS,newNameTag);
+                        bufferedWriter.write(changedParsonTag);
+                        inputXMLString.setLength(0);
+                    }
+                }
+            }
+            bufferedWriter.write("</persons>");*/
+
         } catch (IOException fileNotFoundException) {
             fileNotFoundException.printStackTrace();
         }
