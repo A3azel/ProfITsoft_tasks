@@ -1,7 +1,18 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<statistics>
-    <violation total_amount_of_fines="75000.00" type="DRIVING_UNDER_ALCOHOL"/>
-    <violation total_amount_of_fines="19360.00" type="SPEEDING"/>
-    <violation total_amount_of_fines="4700.00" type="TEASED"/>
-    <violation total_amount_of_fines="4000.50" type="VANDALISM"/>
-</statistics>
+<statistic>
+  <violation>
+    <type>DRIVING_UNDER_ALCOHOL</type>
+    <total_amount_of_fines>75000.00</total_amount_of_fines>
+  </violation>
+  <violation>
+    <type>SPEEDING</type>
+    <total_amount_of_fines>19360.00</total_amount_of_fines>
+  </violation>
+  <violation>
+    <type>TEASED</type>
+    <total_amount_of_fines>4700.00</total_amount_of_fines>
+  </violation>
+  <violation>
+    <type>VANDALISM</type>
+    <total_amount_of_fines>4000.50</total_amount_of_fines>
+  </violation>
+</statistic>

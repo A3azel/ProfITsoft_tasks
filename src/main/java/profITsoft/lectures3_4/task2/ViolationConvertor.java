@@ -1,9 +1,10 @@
 package profITsoft.lectures3_4.task2;
 
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -13,17 +14,16 @@ import profITsoft.lectures3_4.task2.entity.ViolationStatistics;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.lang.reflect.Type;
+import java.io.*;
 import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -41,9 +41,9 @@ public class ViolationConvertor {
     private static final String FINES_ATTRIBUTE = "total_amount_of_fines";
 
     public static void parseJSON(String dirPath, String outputXMLFileName){
-        Gson gson = new GsonBuilder()
-                .setDateFormat(DATE_FORMAT)
-                .create();
+        ObjectMapper mapper = new ObjectMapper();
+        DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
+        mapper.setDateFormat(dateFormat);
         List<Violation> allViolations = new ArrayList<>();
 
         File jsonDirectory = new File(dirPath);
@@ -54,8 +54,7 @@ public class ViolationConvertor {
         }
         for(File jsonFile: filesList){
             try(BufferedReader bufferedReader = new BufferedReader(new FileReader(jsonFile))){
-                Type founderListType = new TypeToken<ArrayList<Violation>>(){}.getType();
-                List<Violation> violationList = gson.fromJson(bufferedReader, founderListType);
+                List<Violation> violationList = mapper.readValue(bufferedReader, new TypeReference<>() {});
                 if(violationList!=null){
                     allViolations.addAll(violationList);
                 }
@@ -63,6 +62,64 @@ public class ViolationConvertor {
                 fileNotFoundException.printStackTrace();
             }
         }
+
+        List<Violation> statisticsList = creatingAndSortingStatistics(allViolations);
+        try {
+            createXML(statisticsList,outputXMLFileName);
+        } catch (ParserConfigurationException | TransformerException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static List<Violation> creatingAndSortingStatistics(List<Violation> violationList){
+        return violationList.stream()
+                .collect(Collectors.groupingBy(Violation::getViolationType,Collectors.reducing(BigDecimal.ZERO, Violation::getFineAmount, BigDecimal::add)))
+                .entrySet()
+                .stream()
+                .sorted(Collections
+                        .reverseOrder(Map.Entry.<String, BigDecimal>comparingByValue())
+                        .thenComparing(Map.Entry.comparingByKey()))
+                .map(x -> new Violation(x.getKey(),x.getValue()))
+                .collect(Collectors.toList());
+    }
+
+    private static void createXML(List<Violation> statisticsList, String outputXMLFileName) throws ParserConfigurationException, TransformerException {
+        XmlMapper mapper = new XmlMapper();
+        mapper.enable(SerializationFeature.INDENT_OUTPUT);
+        ViolationStatistics statistics = new ViolationStatistics(statisticsList);
+
+        try {
+            mapper.writeValue(new File(DEFAULT_OUTPUT_XML_PATH+outputXMLFileName+XML_SUFFIX), statistics);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    // Second solution with Jackson and DOM for creating XML file + added ViolationStatistics class
+
+    /*public static void parseJSON(String dirPath, String outputXMLFileName){
+        ObjectMapper mapper = new ObjectMapper();
+        DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
+        mapper.setDateFormat(dateFormat);
+        List<Violation> allViolations = new ArrayList<>();
+
+        File jsonDirectory = new File(dirPath);
+        File[] filesList = jsonDirectory.listFiles();
+        if(filesList==null){
+            System.out.println("Selected directory is empty");
+            return;
+        }
+        for(File jsonFile: filesList){
+            try(BufferedReader bufferedReader = new BufferedReader(new FileReader(jsonFile))){
+                List<Violation> violationList = mapper.readValue(bufferedReader, new TypeReference<>() {});
+                if(violationList!=null){
+                    allViolations.addAll(violationList);
+                }
+            } catch (IOException fileNotFoundException) {
+                fileNotFoundException.printStackTrace();
+            }
+        }
+
         List<ViolationStatistics> statisticsList = creatingAndSortingStatistics(allViolations);
         try {
             createXML(statisticsList,outputXMLFileName);
@@ -107,9 +164,12 @@ public class ViolationConvertor {
 
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         Transformer transformer = transformerFactory.newTransformer();
+        //prettier output
+        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+        transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+
         DOMSource source = new DOMSource(doc);
         StreamResult result = new StreamResult(new File(DEFAULT_OUTPUT_XML_PATH+outputXMLFileName+XML_SUFFIX));
         transformer.transform(source, result);
-    }
-
+    }*/
 }
