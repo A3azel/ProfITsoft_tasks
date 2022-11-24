@@ -8,8 +8,7 @@ import java.util.List;
 
 @JacksonXmlRootElement(localName = "statistic")
 public class ViolationStatistics {
-    @JacksonXmlElementWrapper(useWrapping = false)
-    //@JacksonXmlElementWrapper(localName = "violations")
+    @JacksonXmlElementWrapper(localName = "violations")
     @JacksonXmlProperty(localName = "violation")
     private final List<Violation> violationList;
 
