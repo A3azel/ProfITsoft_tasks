@@ -22,13 +22,9 @@ public class Parser {
 
     public static void parseXML(String inputFilePath, String outputFileName){
         try(BufferedReader bufferedReader = new BufferedReader(new FileReader(inputFilePath));
-            //You need to remove the second attribute and uncommented outputXMLString to use the second solution
             BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(DEFAULT_OUTPUT_FILE_PATH + outputFileName + XML_SUFFIX,true))) {
             StringBuilder inputXMLString = new StringBuilder();
-            //StringBuilder outputXMLString = new StringBuilder();
             String xmlLine;
-
-            //         In this solution I write each <person> separately so that I don't have to keep everything in memory
             while((xmlLine=bufferedReader.readLine())!=null){
                 inputXMLString.append(xmlLine).append("\n");
                 Pattern pattern = Pattern.compile(XML_REGEX);
@@ -43,32 +39,12 @@ public class Parser {
                         String newNameTag = name + " " + surname;
                         String changedParsonTag = inputXMLString.toString().replaceAll(XML_SURNAME,"").replaceAll(XML_NAME_FOR_REPLAYS,newNameTag);
                         bufferedWriter.write(changedParsonTag);
+                        bufferedWriter.flush();
                         inputXMLString.setLength(0);
                     }
                 }
             }
             bufferedWriter.write("</persons>");
-
-            /*while((xmlLine=bufferedReader.readLine())!=null){
-                inputXMLString.append(xmlLine).append("\n");
-            }
-            Pattern pattern = Pattern.compile(XML_REGEX);
-            Matcher matcher = pattern.matcher(inputXMLString.toString());
-            while (matcher.find()){
-                String person = matcher.group();
-                Matcher nameMatcher = Pattern.compile(XML_NAME).matcher(person);
-                Matcher surnameMatcher = Pattern.compile(XML_SURNAME).matcher(person);
-                if(nameMatcher.find() && surnameMatcher.find()) {
-                    String name = nameMatcher.group(1);
-                    String surname = surnameMatcher.group(1);
-                    String newNameTag = name + " " + surname;
-                    String changedParsonTag = person.replaceAll(XML_SURNAME,"").replaceAll(XML_NAME_FOR_REPLAYS,newNameTag);
-                    outputXMLString.append(changedParsonTag);
-                }
-            }
-            outputXMLString.append("\n").append("</persons>");
-            bufferedWriter.write(outputXMLString.toString());*/
-
         } catch (IOException fileNotFoundException) {
             fileNotFoundException.printStackTrace();
         }
