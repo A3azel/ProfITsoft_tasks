@@ -10,9 +10,9 @@ import java.util.List;
 public class ViolationStatistics {
     @JacksonXmlElementWrapper(localName = "violations")
     @JacksonXmlProperty(localName = "violation")
-    private final List<Violation> violationList;
+    private final List<ViolationXML> violationXMLList;
 
-    public ViolationStatistics(List<Violation> violationList) {
-        this.violationList = violationList;
+    public ViolationStatistics(List<ViolationXML> violationXMLList) {
+        this.violationXMLList = violationXMLList;
     }
 }
