@@ -4,7 +4,7 @@
     <person
         birthData="27.08.1856"
         name = "Іван"
-        surname = "Франко" />
+         />
     <person name="Леся"
         surname="Українка"
         birthData="13.02.1871" />

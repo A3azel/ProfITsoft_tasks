@@ -38,6 +38,10 @@ public class Parser {
                         bufferedWriter.write(changedParsonTag);
                         bufferedWriter.flush();
                         inputXMLString.setLength(0);
+                    }else{
+                        bufferedWriter.write(inputXMLString.toString());
+                        bufferedWriter.flush();
+                        inputXMLString.setLength(0);
                     }
                 }
             }

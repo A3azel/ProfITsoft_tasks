@@ -5,7 +5,7 @@
         birthData="27.08.1856"
         name = "Іван Франко"
         />
-    <person name="Леся Українка"
-       
+    <person name="Леся"
+
         birthData="13.02.1871" />
 </persons>
