@@ -1,21 +1,15 @@
 package profITsoft.lectures3_4.task2.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.math.BigDecimal;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class ViolationJSON {
-    @JsonProperty("type")
+public abstract class Violation {
     private String violationType;
-    @JsonProperty("fine_amount")
     private BigDecimal fineAmount;
 
-      public ViolationJSON() {
+    public Violation() {
     }
 
-    public ViolationJSON(String violationType, BigDecimal fineAmount) {
+    public Violation(String violationType, BigDecimal fineAmount) {
         this.violationType = violationType;
         this.fineAmount = fineAmount;
     }

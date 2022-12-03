@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class ViolationConvertor {
-    private static final String DEFAULT_OUTPUT_XML_PATH = "src/main/resources/task2/outputFiles/";
+    private static final String DEFAULT_OUTPUT_XML_PATH = "src/main/resources/lectures3_4/task2/outputFiles/";
     private static final String XML_SUFFIX = ".xml";
 
     private static final String JSON_REGEX = "\\{\\s*[\\s\\S]+?}";

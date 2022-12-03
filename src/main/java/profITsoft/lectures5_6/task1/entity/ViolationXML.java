@@ -1,4 +1,4 @@
-package profITsoft.lectures3_4.task2.entity;
+package profITsoft.lectures5_6.task1.entity;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 

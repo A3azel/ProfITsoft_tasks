@@ -1,0 +1,20 @@
+<statistic>
+  <violations>
+    <violation>
+      <type>TEASED</type>
+      <total_amount_of_fines>12571434.01</total_amount_of_fines>
+    </violation>
+    <violation>
+      <type>DRIVING_UNDER_ALCOHOL</type>
+      <total_amount_of_fines>12501486.29</total_amount_of_fines>
+    </violation>
+    <violation>
+      <type>SPEEDING</type>
+      <total_amount_of_fines>12490101.44</total_amount_of_fines>
+    </violation>
+    <violation>
+      <type>VANDALISM</type>
+      <total_amount_of_fines>12481610.58</total_amount_of_fines>
+    </violation>
+  </violations>
+</statistic>

@@ -5,7 +5,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Parser {
-    private static final String DEFAULT_OUTPUT_FILE_PATH = "src/main/resources/task1/outputFiles/";
+    private static final String DEFAULT_OUTPUT_FILE_PATH = "src/main/resources/lectures3_4/task1/outputFiles/";
     private static final String XML_SUFFIX = ".xml";
     // finding person tags with all spaces in front of it
     private static final String XML_REGEX = "\\s*[\\s\\S]+?>";
