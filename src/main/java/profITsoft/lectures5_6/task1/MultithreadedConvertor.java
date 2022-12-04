@@ -83,8 +83,11 @@ public class MultithreadedConvertor{
                 .collect(Collectors.toList())
                 .stream()
                 .map(CompletableFuture::allOf)
-
-                .toArray(new CompletableFuture[0]);*/
+                .collect(Collectors.toList())
+                .thenApply(v -> completableFutures.stream()
+                        .map(CompletableFuture::join)
+                        .flatMap(Collection::stream)
+                        .collect(Collectors.toList()));*/
 
 
         //Work
@@ -101,13 +104,13 @@ public class MultithreadedConvertor{
 
         service.shutdown();
 
-        CompletableFuture<Void> all = CompletableFuture.allOf(completableFutures.toArray(new CompletableFuture[0]));
+        CompletableFuture<List<ViolationJSON>> all = CompletableFuture.allOf(completableFutures.toArray(new CompletableFuture[0]))
+                .thenApply(v -> completableFutures.stream()
+                        .map(CompletableFuture::join)
+                        .flatMap(Collection::stream)
+                        .collect(Collectors.toList()));
 
-        CompletableFuture<List<ViolationJSON>> allPageContentsFuture = all.thenApply(v -> completableFutures.stream()
-                .map(CompletableFuture::join)
-                .flatMap(Collection::stream)
-                .collect(Collectors.toList()));
-        List<ViolationXML> violationXMLS = ViolationConvertor.creatingAndSortingStatistics(allPageContentsFuture.get()).stream()
+        List<ViolationXML> violationXMLS = ViolationConvertor.creatingAndSortingStatistics(all.get()).stream()
                 .map(x -> new ViolationXML(x.getViolationType(), x.getFineAmount()))
                 .collect(Collectors.toList());
         try {
@@ -115,6 +118,22 @@ public class MultithreadedConvertor{
         } catch (ParserConfigurationException | TransformerException e) {
             e.printStackTrace();
         }
+
+        /*CompletableFuture<Void> all = CompletableFuture.allOf(completableFutures.toArray(new CompletableFuture[0]));
+
+        CompletableFuture<List<ViolationJSON>> allPageContentsFuture = all.thenApply(v -> completableFutures.stream()
+                .map(CompletableFuture::join)
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList()));
+
+        List<ViolationXML> violationXMLS = ViolationConvertor.creatingAndSortingStatistics(allPageContentsFuture.get()).stream()
+                .map(x -> new ViolationXML(x.getViolationType(), x.getFineAmount()))
+                .collect(Collectors.toList());
+        try {
+            ViolationConvertor.createXML(violationXMLS, "result");
+        } catch (ParserConfigurationException | TransformerException e) {
+            e.printStackTrace();
+        }*/
 
         //
 
