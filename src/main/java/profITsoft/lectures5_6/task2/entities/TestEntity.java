@@ -1,6 +1,7 @@
 package profITsoft.lectures5_6.task2.entities;
 
 import java.util.Date;
+import java.util.Objects;
 
 public class TestEntity {
     private String stringProperty;
@@ -38,6 +39,19 @@ public class TestEntity {
 
     public void setTimeProperty(Date timeProperty) {
         this.timeProperty = timeProperty;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof TestEntity)) return false;
+        TestEntity that = (TestEntity) o;
+        return myNumber == that.myNumber && Objects.equals(stringProperty, that.stringProperty) && Objects.equals(timeProperty, that.timeProperty);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(stringProperty, myNumber, timeProperty);
     }
 
     @Override

@@ -5,8 +5,8 @@ import profITsoft.lectures5_6.task2.annotations.Property;
 import java.util.Date;
 import java.util.Objects;
 
-public class TestEntityWithAnnotations {
-    @Property(name = "firstname")
+public class WrongTestEntity {
+    @Property(name = "wrong")
     private String firstName;
     @Property(name = "lastname")
     private String lastName;
@@ -14,10 +14,10 @@ public class TestEntityWithAnnotations {
     private Date birthday;
     private int age;
 
-    public TestEntityWithAnnotations() {
+    public WrongTestEntity() {
     }
 
-    public TestEntityWithAnnotations(String firstName, String lastName, Date birthday, int age) {
+    public WrongTestEntity(String firstName, String lastName, Date birthday, int age) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.birthday = birthday;
@@ -56,11 +56,12 @@ public class TestEntityWithAnnotations {
         this.age = age;
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof TestEntityWithAnnotations)) return false;
-        TestEntityWithAnnotations that = (TestEntityWithAnnotations) o;
+        if (!(o instanceof WrongTestEntity)) return false;
+        WrongTestEntity that = (WrongTestEntity) o;
         return age == that.age && Objects.equals(firstName, that.firstName) && Objects.equals(lastName, that.lastName) && Objects.equals(birthday, that.birthday);
     }
 
@@ -71,7 +72,7 @@ public class TestEntityWithAnnotations {
 
     @Override
     public String toString() {
-        return "TestEntityWithAnnotations{" +
+        return "WrongTestEntity{" +
                 "firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", birthday=" + birthday +
