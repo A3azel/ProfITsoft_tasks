@@ -8,16 +8,14 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.Duration;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.*;
-
-import static com.fasterxml.jackson.databind.type.LogicalType.DateTime;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Random;
 
 public class JsonGenerator {
     private static final String TEST_JSON_DIR_PATH = "src/main/resources/lectures5_6/task1/inputFiles/";
