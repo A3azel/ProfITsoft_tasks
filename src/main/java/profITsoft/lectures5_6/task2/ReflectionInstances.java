@@ -2,26 +2,16 @@ package profITsoft.lectures5_6.task2;
 
 import profITsoft.lectures5_6.task2.annotations.Property;
 import profITsoft.lectures5_6.task2.exeptions.CustomFillInstantException;
-import profITsoft.lectures5_6.task2.exeptions.CustomParseException;
 import profITsoft.lectures5_6.task2.validation.ProcessingProperties;
 
-import java.io.FileReader;
-import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.file.Path;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.Instant;
-import java.time.format.DateTimeParseException;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
-import java.util.stream.Collectors;
 
 
 public class ReflectionInstances {
@@ -83,56 +73,6 @@ public class ReflectionInstances {
         }
         return (T) selectedClazz;
     }
-
-    /*private static Map<String,String> parseProperties(Path propertiesPath){
-        Map<String,String> fieldsMap = new HashMap<>();
-        try(FileReader reader = new FileReader(String.valueOf(propertiesPath))){
-            Properties properties = new Properties();
-            properties.load(reader);
-            fieldsMap = properties.entrySet()
-                    .stream()
-                    .collect(Collectors.toMap(
-                            e -> e.getKey().toString(),
-                            e -> e.getValue().toString()
-                    )
-            );
-            return fieldsMap;
-        } catch (IOException fileNotFoundException) {
-           fileNotFoundException.printStackTrace();
-        }
-        return fieldsMap;
-    }
-
-    private static Integer convertToInt(String possibleInt){
-        try{
-            return Integer.parseInt(possibleInt);
-        }catch (NumberFormatException e){
-            throw new CustomParseException(String.format("Can't format to Integer %1$s",possibleInt));
-        }
-
-    }
-
-    public static Instant convertToInstant(String possibleInstant){
-        try {
-            return Instant.parse(possibleInstant);
-        }catch (DateTimeParseException e){
-            throw new CustomParseException(String.format("Can't format to Instant %1$s",possibleInstant));
-        }
-    }
-
-    private static Date convertToDate(String possibleData,String dateFormat) {
-        DateFormat df = new SimpleDateFormat("dd.MM.yyyy HH:mm");
-        if(!dateFormat.equals("")){
-            df = new SimpleDateFormat(dateFormat);
-        }
-        Date date;
-        try {
-            date = df.parse(possibleData);
-        } catch (ParseException e) {
-            throw new CustomParseException(String.format("Can't parse format to Date %1$s",dateFormat));
-        }
-        return date;
-    }*/
 
     private static String createSetterName(String fieldName){
         StringBuilder stringBuilder = new StringBuilder("set");

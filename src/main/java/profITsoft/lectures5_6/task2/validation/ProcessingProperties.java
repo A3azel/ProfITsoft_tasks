@@ -52,19 +52,18 @@ public class ProcessingProperties {
 
     }
 
-    //default
     public static Instant convertToInstant(String possibleInstant, String instantFormat){
         DateTimeFormatter formattedInstant = DateTimeFormatter.ofPattern(DEFAULT_DATA_FORMAT);
         if(!instantFormat.equals("")){
             formattedInstant = DateTimeFormatter.ofPattern(instantFormat);
         }
-        LocalDateTime localDateTime = LocalDateTime.parse(possibleInstant,formattedInstant);
         try {
-            return localDateTime.toInstant(ZoneOffset.UTC);
-        }catch (DateTimeParseException e){
+            return Instant.ofEpochSecond(Long.parseLong(possibleInstant));
+        }catch (NumberFormatException e){
             try {
-                return Instant.ofEpochSecond(Long.parseLong(possibleInstant));
-            }catch (NumberFormatException e1){
+                LocalDateTime localDateTime = LocalDateTime.parse(possibleInstant,formattedInstant);
+                return localDateTime.toInstant(ZoneOffset.UTC);
+            }catch (DateTimeParseException e1){
                 throw new CustomParseException(String.format("Can't format to Instant %1$s",possibleInstant));
             }
         }
