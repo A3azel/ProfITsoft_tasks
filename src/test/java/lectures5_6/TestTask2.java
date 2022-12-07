@@ -11,6 +11,7 @@ import profITsoft.lectures5_6.task2.entities.WrongTestEntity;
 import profITsoft.lectures5_6.task2.exeptions.CustomFillInstantException;
 import profITsoft.lectures5_6.task2.exeptions.CustomParseException;
 
+import java.io.FileNotFoundException;
 import java.nio.file.Path;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -41,7 +42,7 @@ public class TestTask2 {
             Date correctDate = df.parse("29.11.2022 18:30");
             correctInstance = new TestEntity("value1",10,correctDate);
             createdInstance = ReflectionInstances.loadFromProperties(TestEntity.class, Path.of(TEST_1_PATH));
-        } catch (ParseException | CustomFillInstantException | CustomParseException e) {
+        } catch (ParseException | CustomFillInstantException | CustomParseException | FileNotFoundException e) {
             e.printStackTrace();
         }
         Assertions.assertEquals(correctInstance,createdInstance);
@@ -56,7 +57,7 @@ public class TestTask2 {
             Date correctDate = df.parse("01-01-2000 19:19");
             correctInstance = new TestEntityWithAnnotations("User","User",correctDate,22);
             createdInstance = ReflectionInstances.loadFromProperties(TestEntityWithAnnotations.class, Path.of(TEST_2_PATH));
-        } catch (ParseException | CustomFillInstantException | CustomParseException e) {
+        } catch (ParseException | CustomFillInstantException | CustomParseException | FileNotFoundException e) {
             e.printStackTrace();
         }
         Assertions.assertEquals(correctInstance,createdInstance);
@@ -79,7 +80,7 @@ public class TestTask2 {
 
     @Test
     public void testNullAsPath(){
-        Assertions.assertThrows(CustomParseException.class,() -> ReflectionInstances.loadFromProperties(TestEntity.class, null));
+        Assertions.assertThrows(FileNotFoundException.class,() -> ReflectionInstances.loadFromProperties(TestEntity.class, null));
     }
 
 }

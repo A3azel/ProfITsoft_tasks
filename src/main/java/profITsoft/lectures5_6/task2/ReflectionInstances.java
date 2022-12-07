@@ -5,6 +5,7 @@ import profITsoft.lectures5_6.task2.exeptions.CustomFillInstantException;
 import profITsoft.lectures5_6.task2.exeptions.CustomParseException;
 import profITsoft.lectures5_6.task2.validation.ProcessingProperties;
 
+import java.io.FileNotFoundException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -17,7 +18,7 @@ import java.util.Map;
 
 public class ReflectionInstances {
 
-    public static <T>T loadFromProperties(Class<T> cls, Path propertiesPath) throws CustomFillInstantException, CustomParseException {
+    public static <T>T loadFromProperties(Class<T> cls, Path propertiesPath) throws CustomFillInstantException, CustomParseException, FileNotFoundException {
         Constructor<?> emptyConstructor;
         Object selectedClazz = null;
         try {
@@ -27,7 +28,12 @@ public class ReflectionInstances {
             e.printStackTrace();
         }
 
-        Map<String,String> fieldsMap = ProcessingProperties.parseProperties(propertiesPath);
+        Map<String,String> fieldsMap = null;
+        try {
+            fieldsMap = ProcessingProperties.parseProperties(propertiesPath);
+        } catch (FileNotFoundException e) {
+            throw new FileNotFoundException(e.getMessage());
+        }
         for(Field selectedField: cls.getDeclaredFields()){
             Property property = selectedField.getAnnotation(Property.class);
             String propertyValue = fieldsMap.get(selectedField.getName());

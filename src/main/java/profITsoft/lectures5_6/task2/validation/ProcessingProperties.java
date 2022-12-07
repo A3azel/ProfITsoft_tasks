@@ -2,6 +2,7 @@ package profITsoft.lectures5_6.task2.validation;
 
 import profITsoft.lectures5_6.task2.exeptions.CustomParseException;
 
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -24,8 +25,8 @@ public class ProcessingProperties {
 
     private static final String DEFAULT_DATA_FORMAT = "dd.MM.yyyy HH:mm";
 
-    public static Map<String,String> parseProperties(Path propertiesPath){
-        Map<String,String> fieldsMap = new HashMap<>();
+    public static Map<String,String> parseProperties(Path propertiesPath) throws FileNotFoundException {
+        Map<String,String> fieldsMap;
         try(FileReader reader = new FileReader(String.valueOf(propertiesPath))){
             Properties properties = new Properties();
             properties.load(reader);
@@ -38,9 +39,8 @@ public class ProcessingProperties {
                     );
             return fieldsMap;
         } catch (IOException fileNotFoundException) {
-            fileNotFoundException.printStackTrace();
+            throw new FileNotFoundException(String.format("File with path %1$s not found",propertiesPath));
         }
-        return fieldsMap;
     }
 
     public static Integer convertToInt(String possibleInt) throws CustomParseException {
