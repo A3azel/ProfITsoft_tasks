@@ -15,6 +15,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -29,20 +30,20 @@ public class MultithreadedViolationConvertor {
     private static final String XML_SUFFIX = ".xml";
     private static final String DATE_FORMAT="yyyy-MM-dd HH:mm:ss";
     private static final int CUSTOM_JSON_BUFFER = 50;
-    private static final int DEFAULT_THREAD_COUNT = 8;
+    private static final int DEFAULT_THREAD_COUNT = 4;
 
     public static void multithreadingParseJSON(String dirPath, String outputFileName){
         File[] filesList = checkFile(dirPath);
 
         ExecutorService service = Executors.newFixedThreadPool(DEFAULT_THREAD_COUNT);
 
-        List<CompletableFuture<List<ViolationJSON>>> completableFutures = Arrays.stream(filesList)
+        List<CompletableFuture<List<ViolationJSON>>> completableFutureList = Arrays.stream(filesList)
                 .map(x -> CompletableFuture.supplyAsync(() -> MultithreadedViolationConvertor.parseJSON(x),service))
                 .collect(Collectors.toList());
         service.shutdown();
 
-        CompletableFuture<List<ViolationJSON>> completableFuture = CompletableFuture.allOf(completableFutures.toArray(new CompletableFuture[0]))
-                .thenApply(v -> completableFutures.stream()
+        CompletableFuture<List<ViolationJSON>> completableFuture = CompletableFuture.allOf(completableFutureList.toArray(new CompletableFuture[0]))
+                .thenApply(v -> completableFutureList.stream()
                 .map(CompletableFuture::join)
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList()));
@@ -62,7 +63,6 @@ public class MultithreadedViolationConvertor {
         }
     }
 
-
     private static List<ViolationJSON> parseJSON(File selectedFile){
         ObjectMapper mapper = new ObjectMapper();
         DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
@@ -72,8 +72,7 @@ public class MultithreadedViolationConvertor {
         int jsonCount = 0;
 
         try (InputStream is = new FileInputStream(selectedFile)){
-            Scanner scanner = new Scanner(is, "UTF-8").useDelimiter("},");
-
+            Scanner scanner = new Scanner(is, StandardCharsets.UTF_8).useDelimiter("},");
             while (scanner.hasNext()) {
                 String row = scanner.next();
                 row = row+"}";
@@ -90,39 +89,9 @@ public class MultithreadedViolationConvertor {
                 allViolationJSONS = creatingAndSortingStatistics(allViolationJSONS);
             }
             scanner.close();
-
-
         } catch (IOException fileNotFoundException) {
             fileNotFoundException.printStackTrace();
         }
-
-        //
-        /*try(BufferedReader bufferedReader = new BufferedReader(new FileReader(selectedFile))){
-            StringBuilder jsonString = new StringBuilder();
-            String jsonLine;
-            int jsonCount = 0;
-            while((jsonLine=bufferedReader.readLine())!=null){
-                jsonString.append(jsonLine).append("\n");
-                Pattern pattern = Pattern.compile(JSON_REGEX);
-                Matcher matcher = pattern.matcher(jsonString.toString());
-                if (matcher.find()){
-                    ViolationJSON violationJSON = mapper.readValue(matcher.group(), ViolationJSON.class);
-                    allViolationJSONS.add(violationJSON);
-                    jsonCount++;
-                    if(jsonCount>CUSTOM_JSON_BUFFER){
-                        jsonCount = 0;
-                        allViolationJSONS = creatingAndSortingStatistics(allViolationJSONS);
-                    }
-                    jsonString.setLength(0);
-                }
-            }
-            if(jsonCount!=0){
-                allViolationJSONS = creatingAndSortingStatistics(allViolationJSONS);
-            }
-            //return mapper.readValue(bufferedReader, new TypeReference<>(){});
-        } catch (IOException fileNotFoundException) {
-            fileNotFoundException.printStackTrace();
-        }*/
         return allViolationJSONS;
     }
 
@@ -149,7 +118,6 @@ public class MultithreadedViolationConvertor {
         }
     }
 
-    //
     private static File[] checkFile(String dirPath){
         File jsonDirectory = new File(dirPath);
         File[] filesList = jsonDirectory.listFiles();

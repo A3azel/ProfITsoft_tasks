@@ -4,6 +4,7 @@ import profITsoft.lectures5_6.task2.annotations.Property;
 
 import java.time.Instant;
 import java.util.Date;
+import java.util.Objects;
 
 public class TestEntity2 {
     @Property(name = "sp")
@@ -44,6 +45,19 @@ public class TestEntity2 {
 
     public void setInstant(Instant instant) {
         this.instant = instant;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof TestEntity2)) return false;
+        TestEntity2 that = (TestEntity2) o;
+        return myNumber == that.myNumber && Objects.equals(stringProperty, that.stringProperty) && Objects.equals(instant, that.instant);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(stringProperty, myNumber, instant);
     }
 
     @Override

@@ -43,16 +43,16 @@ public class ProcessingProperties {
         return fieldsMap;
     }
 
-    public static Integer convertToInt(String possibleInt){
+    public static Integer convertToInt(String possibleInt) throws CustomParseException {
         try{
             return Integer.parseInt(possibleInt);
         }catch (NumberFormatException e){
-            throw new CustomParseException(String.format("Can't format to Integer %1$s",possibleInt));
+            throw new CustomParseException(String.format("Can't format %1$s to Integer",possibleInt));
         }
 
     }
 
-    public static Instant convertToInstant(String possibleInstant, String instantFormat){
+    public static Instant convertToInstant(String possibleInstant, String instantFormat) throws CustomParseException {
         DateTimeFormatter formattedInstant = DateTimeFormatter.ofPattern(DEFAULT_DATA_FORMAT);
         if(!instantFormat.equals("")){
             formattedInstant = DateTimeFormatter.ofPattern(instantFormat);
@@ -64,12 +64,12 @@ public class ProcessingProperties {
                 LocalDateTime localDateTime = LocalDateTime.parse(possibleInstant,formattedInstant);
                 return localDateTime.toInstant(ZoneOffset.UTC);
             }catch (DateTimeParseException e1){
-                throw new CustomParseException(String.format("Can't format to Instant %1$s",possibleInstant));
+                throw new CustomParseException(String.format("Can't format %1$s to Instant  with pattern %2$s",possibleInstant,formattedInstant));
             }
         }
     }
 
-    public static Date convertToDate(String possibleData, String dateFormat) {
+    public static Date convertToDate(String possibleData, String dateFormat) throws CustomParseException {
         DateFormat df = new SimpleDateFormat(DEFAULT_DATA_FORMAT);
         if(!dateFormat.equals("")){
             df = new SimpleDateFormat(dateFormat);
@@ -78,7 +78,7 @@ public class ProcessingProperties {
         try {
             date = df.parse(possibleData);
         } catch (ParseException e) {
-            throw new CustomParseException(String.format("Can't parse format to Date %1$s",dateFormat));
+            throw new CustomParseException(String.format("Can't parse format %1$s to Date  with pattern %2$s",dateFormat, df));
         }
         return date;
     }

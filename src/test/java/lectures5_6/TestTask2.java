@@ -18,9 +18,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class TestTask2 {
-    private static final String TEST_1_PATH = "src/main/resources/lectures5_6/task2/inputFiles/test1.properties";
-    private static final String TEST_2_PATH = "src/main/resources/lectures5_6/task2/inputFiles/test2.properties";
-    private static final String TEST_3_PATH = "src/main/resources/lectures5_6/task2/inputFiles/test3.properties";
+    private static final String TEST_1_PATH = "src/main/resources/lectures5_6/task2/test1.properties";
+    private static final String TEST_2_PATH = "src/main/resources/lectures5_6/task2/test2.properties";
+    private static final String TEST_3_PATH = "src/main/resources/lectures5_6/task2/test3.properties";
 
     @BeforeAll
     public static void init(){
@@ -35,27 +35,31 @@ public class TestTask2 {
     @Test
     public void testLoadFromPropertiesWithoutAnnotations(){
         DateFormat df = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+        TestEntity correctInstance = null;
+        TestEntity createdInstance = null;
         try {
             Date correctDate = df.parse("29.11.2022 18:30");
-            TestEntity correctInstance = new TestEntity("value1",10,correctDate);
-            TestEntity createdInstance = ReflectionInstances.loadFromProperties(TestEntity.class, Path.of(TEST_1_PATH));
-            Assertions.assertEquals(correctInstance,createdInstance);
-        } catch (ParseException e) {
+            correctInstance = new TestEntity("value1",10,correctDate);
+            createdInstance = ReflectionInstances.loadFromProperties(TestEntity.class, Path.of(TEST_1_PATH));
+        } catch (ParseException | CustomFillInstantException | CustomParseException e) {
             e.printStackTrace();
         }
+        Assertions.assertEquals(correctInstance,createdInstance);
     }
 
     @Test
     public void testLoadFromPropertiesWithAnnotations(){
         DateFormat df = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+        TestEntityWithAnnotations correctInstance = null;
+        TestEntityWithAnnotations createdInstance = null;
         try {
             Date correctDate = df.parse("01-01-2000 19:19");
-            TestEntityWithAnnotations correctInstance = new TestEntityWithAnnotations("User","User",correctDate,22);
-            TestEntityWithAnnotations createdInstance = ReflectionInstances.loadFromProperties(TestEntityWithAnnotations.class, Path.of(TEST_2_PATH));
-            Assertions.assertEquals(correctInstance,createdInstance);
-        } catch (ParseException e) {
+            correctInstance = new TestEntityWithAnnotations("User","User",correctDate,22);
+            createdInstance = ReflectionInstances.loadFromProperties(TestEntityWithAnnotations.class, Path.of(TEST_2_PATH));
+        } catch (ParseException | CustomFillInstantException | CustomParseException e) {
             e.printStackTrace();
         }
+        Assertions.assertEquals(correctInstance,createdInstance);
     }
 
     @Test
@@ -66,6 +70,16 @@ public class TestTask2 {
     @Test
     public void testLoadFromPropertiesWithExceptions2(){
         Assertions.assertThrows(CustomParseException.class,() -> ReflectionInstances.loadFromProperties(TestEntityWithAnnotations.class, Path.of(TEST_3_PATH)));
+    }
+
+    @Test
+    public void testNullAsClass(){
+        Assertions.assertThrows(NullPointerException.class,() -> ReflectionInstances.loadFromProperties(null, Path.of(TEST_3_PATH)));
+    }
+
+    @Test
+    public void testNullAsPath(){
+        Assertions.assertThrows(CustomParseException.class,() -> ReflectionInstances.loadFromProperties(TestEntity.class, null));
     }
 
 }

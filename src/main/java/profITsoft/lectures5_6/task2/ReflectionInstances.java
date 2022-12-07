@@ -2,6 +2,7 @@ package profITsoft.lectures5_6.task2;
 
 import profITsoft.lectures5_6.task2.annotations.Property;
 import profITsoft.lectures5_6.task2.exeptions.CustomFillInstantException;
+import profITsoft.lectures5_6.task2.exeptions.CustomParseException;
 import profITsoft.lectures5_6.task2.validation.ProcessingProperties;
 
 import java.lang.reflect.Constructor;
@@ -16,7 +17,7 @@ import java.util.Map;
 
 public class ReflectionInstances {
 
-    public static <T>T loadFromProperties(Class<T> cls, Path propertiesPath){
+    public static <T>T loadFromProperties(Class<T> cls, Path propertiesPath) throws CustomFillInstantException, CustomParseException {
         Constructor<?> emptyConstructor;
         Object selectedClazz = null;
         try {
@@ -41,19 +42,6 @@ public class ReflectionInstances {
                     propertyValue = fieldsMap.get(property.name());
                 }
             }
-            /*if(property!=null) {
-                dataFormat = property.format();
-                if (!property.name().equals("")) {
-                    if(fieldsMap.get(selectedField.getName()) == null){
-                        throw new CustomFillInstantException(String.format("Can't find field %1$s",selectedField.getName()));
-                    }
-                    propertyValue = fieldsMap.get(property.name());
-                }else {
-                    propertyValue = fieldsMap.get(selectedField.getName());
-                }
-            }else {
-                propertyValue = fieldsMap.get(selectedField.getName());
-            }*/
 
             Method setter;
             try {
@@ -69,6 +57,8 @@ public class ReflectionInstances {
                 }
             } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
                 throw new CustomFillInstantException(String.format("Can't fill field %1$s",selectedField.getName()));
+            } catch (CustomParseException e) {
+                throw new CustomParseException(e.getMessage());
             }
         }
         return (T) selectedClazz;
