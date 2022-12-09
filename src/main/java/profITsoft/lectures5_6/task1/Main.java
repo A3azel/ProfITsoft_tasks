@@ -5,10 +5,10 @@ public class Main {
     // 50 ітерацій
     // швидкість однопоточної програми: 17502 мс
     // швидкість багатопоточної програми (2 потоки): 11211 мс
-    // швидкість багатопоточної програми (4 потоки): 9322 мс
+    // швидкість багатопоточної програми (4 потоки): 8138 мс
     // швидкість багатопоточної програми (8 потоків): 7629 мс
     private static final String TEST_JSON_DIR_PATH = "src/main/resources/lectures5_6/task1/inputFiles";
-    //private static final String TEST_JSON_DIR_PATH = "src/main/resources/lectures5_6/task1/test";
+
     public static void main(String[] args) {
         long time1 = System.currentTimeMillis();
         for (int i = 0; i < 50; i++) {

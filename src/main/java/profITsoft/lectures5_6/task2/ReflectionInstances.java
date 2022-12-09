@@ -28,7 +28,7 @@ public class ReflectionInstances {
             e.printStackTrace();
         }
 
-        Map<String,String> fieldsMap = null;
+        Map<String,String> fieldsMap;
         try {
             fieldsMap = ProcessingProperties.parseProperties(propertiesPath);
         } catch (FileNotFoundException e) {
@@ -38,7 +38,6 @@ public class ReflectionInstances {
             Property property = selectedField.getAnnotation(Property.class);
             String propertyValue = fieldsMap.get(selectedField.getName());
             String dataFormat = "";
-
             if(property!=null) {
                 dataFormat = property.format();
                 if (!property.name().equals("")) {

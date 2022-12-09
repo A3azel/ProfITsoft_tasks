@@ -19,10 +19,7 @@ import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
 public class MultithreadedViolationConvertor {
@@ -30,7 +27,7 @@ public class MultithreadedViolationConvertor {
     private static final String XML_SUFFIX = ".xml";
     private static final String DATE_FORMAT="yyyy-MM-dd HH:mm:ss";
     private static final int CUSTOM_JSON_BUFFER = 50;
-    private static final int DEFAULT_THREAD_COUNT = 4;
+    private static final int DEFAULT_THREAD_COUNT = 10;
 
     public static void multithreadingParseJSON(String dirPath, String outputFileName){
         File[] filesList = checkFile(dirPath);
@@ -38,7 +35,7 @@ public class MultithreadedViolationConvertor {
         ExecutorService service = Executors.newFixedThreadPool(DEFAULT_THREAD_COUNT);
 
         List<CompletableFuture<List<ViolationJSON>>> completableFutureList = Arrays.stream(filesList)
-                .map(x -> CompletableFuture.supplyAsync(() -> MultithreadedViolationConvertor.parseJSON(x),service))
+                .map(x -> CompletableFuture.supplyAsync(() -> parseJSON(x),service))
                 .collect(Collectors.toList());
         service.shutdown();
 
@@ -50,14 +47,14 @@ public class MultithreadedViolationConvertor {
 
         List<ViolationXML> violationXMLS = null;
         try {
-            violationXMLS = MultithreadedViolationConvertor.creatingAndSortingStatistics(completableFuture.get()).stream()
+            violationXMLS = creatingAndSortingStatistics(completableFuture.get()).stream()
                     .map(x -> new ViolationXML(x.getViolationType(), x.getFineAmount()))
                     .collect(Collectors.toList());
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         try {
-            MultithreadedViolationConvertor.createXML(violationXMLS, outputFileName);
+            createXML(violationXMLS, outputFileName);
         } catch (ParserConfigurationException | TransformerException e) {
             e.printStackTrace();
         }
@@ -95,7 +92,7 @@ public class MultithreadedViolationConvertor {
         return allViolationJSONS;
     }
 
-    private static List<ViolationJSON> creatingAndSortingStatistics(List<ViolationJSON> violationJSONList){
+    public static List<ViolationJSON> creatingAndSortingStatistics(List<ViolationJSON> violationJSONList){
         return violationJSONList.stream()
                 .collect(Collectors.groupingBy(ViolationJSON::getViolationType,Collectors.reducing(BigDecimal.ZERO, ViolationJSON::getFineAmount, BigDecimal::add)))
                 .entrySet()
