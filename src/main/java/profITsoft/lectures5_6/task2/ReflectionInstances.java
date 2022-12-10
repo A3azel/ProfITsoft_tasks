@@ -22,7 +22,7 @@ public class ReflectionInstances {
         Constructor<?> emptyConstructor;
         Object selectedClazz = null;
         try {
-            emptyConstructor = cls.getConstructor();
+            emptyConstructor = cls.getDeclaredConstructor();
             selectedClazz = emptyConstructor.newInstance();
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e ) {
             e.printStackTrace();
