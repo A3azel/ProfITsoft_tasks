@@ -16,9 +16,9 @@ public class Main {
 
     public static void main(String[] args) {
         long time1 = System.currentTimeMillis();
-        for (int i = 0; i < 50; i++) {
+        //for (int i = 0; i < 50; i++) {
             MultithreadedViolationConvertor.multithreadingParseJSON(TEST_JSON_DIR_PATH,"test");
-         }
+         //}
         System.out.println(System.currentTimeMillis()-time1);
 
         //JsonGenerator.generateJsonFiles();

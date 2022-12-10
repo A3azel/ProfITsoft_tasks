@@ -47,8 +47,23 @@ public class ReflectionInstances {
                     propertyValue = fieldsMap.get(property.name());
                 }
             }
+            selectedField.setAccessible(true);
+            try {
+                if(selectedField.getType()==Integer.class || selectedField.getType()==int.class){
+                    selectedField.setInt(selectedClazz,ProcessingProperties.convertToInt(propertyValue));
+                }else if(selectedField.getType()==Instant.class){
+                    selectedField.set(selectedClazz,ProcessingProperties.convertToInstant(propertyValue,dataFormat));
+                }else if(selectedField.getType()==Date.class){
+                    selectedField.set(selectedClazz,ProcessingProperties.convertToDate(propertyValue, dataFormat));
+                }else {
+                    selectedField.set(selectedClazz,propertyValue);
+                }
+            } catch (IllegalAccessException e) {
+                throw new CustomFillInstantException(String.format("Can't fill field %1$s",selectedField.getName()));
+            }
 
-            Method setter;
+            // Якщо використовувати сеттери класу
+            /*Method setter;
             try {
                 setter = cls.getDeclaredMethod(createSetterName(selectedField.getName()),selectedField.getType());
                 if(selectedField.getType()==Integer.class || selectedField.getType()==int.class){
@@ -64,7 +79,7 @@ public class ReflectionInstances {
                 throw new CustomFillInstantException(String.format("Can't fill field %1$s",selectedField.getName()));
             } catch (CustomParseException e) {
                 throw new CustomParseException(e.getMessage());
-            }
+            }*/
         }
         return (T) selectedClazz;
     }
