@@ -19,7 +19,10 @@ import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.concurrent.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 public class MultithreadedViolationConvertor {
@@ -27,7 +30,7 @@ public class MultithreadedViolationConvertor {
     private static final String XML_SUFFIX = ".xml";
     private static final String DATE_FORMAT="yyyy-MM-dd HH:mm:ss";
     private static final int CUSTOM_JSON_BUFFER = 50;
-    private static final int DEFAULT_THREAD_COUNT = 10;
+    private static final int DEFAULT_THREAD_COUNT = 8;
 
     public static void multithreadingParseJSON(String dirPath, String outputFileName){
         File[] filesList = checkFile(dirPath);
@@ -53,6 +56,32 @@ public class MultithreadedViolationConvertor {
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
+
+        // рішення без join та allOf
+
+       /*File[] filesList = checkFile(dirPath);
+
+       List<ViolationJSON> violationJSONList = new ArrayList<>();
+
+        ExecutorService service = Executors.newFixedThreadPool(DEFAULT_THREAD_COUNT);
+        for(File f : filesList){
+            CompletableFuture.supplyAsync(()->f,service)
+                    .thenAccept(e->violationJSONList.addAll(parseJSON(e)));
+        }
+
+        service.shutdown();
+        while (!service.isTerminated()){
+            try {
+                Thread.sleep(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        List<ViolationXML> violationXMLS = creatingAndSortingStatistics(violationJSONList).stream()
+                    .map(x -> new ViolationXML(x.getViolationType(), x.getFineAmount()))
+                    .collect(Collectors.toList());*/
+
         try {
             createXML(violationXMLS, outputFileName);
         } catch (ParserConfigurationException | TransformerException e) {

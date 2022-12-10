@@ -15,7 +15,6 @@ import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.stream.Collectors;
@@ -64,7 +63,7 @@ public class ProcessingProperties {
                 LocalDateTime localDateTime = LocalDateTime.parse(possibleInstant,formattedInstant);
                 return localDateTime.toInstant(ZoneOffset.UTC);
             }catch (DateTimeParseException e1){
-                throw new CustomParseException(String.format("Can't format %1$s to Instant  with pattern %2$s",possibleInstant,formattedInstant));
+                throw new CustomParseException(String.format("Can't format %1$s to Instant with pattern %2$s",possibleInstant,formattedInstant));
             }
         }
     }
@@ -78,7 +77,7 @@ public class ProcessingProperties {
         try {
             date = df.parse(possibleData);
         } catch (ParseException e) {
-            throw new CustomParseException(String.format("Can't parse format %1$s to Date  with pattern %2$s",dateFormat, df));
+            throw new CustomParseException(String.format("Can't parse format %1$s to Date with pattern %2$s",dateFormat, df));
         }
         return date;
     }

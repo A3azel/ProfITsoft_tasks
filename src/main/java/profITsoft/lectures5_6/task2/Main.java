@@ -1,6 +1,7 @@
 package profITsoft.lectures5_6.task2;
 
 import profITsoft.lectures5_6.task2.entities.TestEntity2;
+import profITsoft.lectures5_6.task2.entities.TestEntityWithAnnotations;
 import profITsoft.lectures5_6.task2.exeptions.CustomFillInstantException;
 import profITsoft.lectures5_6.task2.exeptions.CustomParseException;
 
