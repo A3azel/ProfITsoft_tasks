@@ -19,10 +19,7 @@ import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
 public class MultithreadedViolationConvertor {
@@ -42,15 +39,19 @@ public class MultithreadedViolationConvertor {
                 .collect(Collectors.toList());
         service.shutdown();
 
-        CompletableFuture<List<ViolationJSON>> completableFuture = CompletableFuture.allOf(completableFutureList.toArray(new CompletableFuture[0]))
-                .thenApply(v -> completableFutureList.stream()
-                .map(CompletableFuture::join)
-                .flatMap(Collection::stream)
-                .collect(Collectors.toList()));
+        CompletableFuture<Void> allFutures = CompletableFuture.allOf(completableFutureList.toArray(new CompletableFuture[0]));
+
+        CompletableFuture<List<List<ViolationJSON>>> allCompletableFuture =
+                allFutures.thenApply(future -> completableFutureList.stream()
+                        .map(CompletableFuture::join)
+                        .collect(Collectors.toList()));
 
         List<ViolationXML> violationXMLS = null;
         try {
-            violationXMLS = creatingAndSortingStatistics(completableFuture.get()).stream()
+            violationXMLS = creatingAndSortingStatistics(allCompletableFuture.get()
+                    .stream()
+                    .flatMap(List::stream)
+                    .collect(Collectors.toList())).stream()
                     .map(x -> new ViolationXML(x.getViolationType(), x.getFineAmount()))
                     .collect(Collectors.toList());
         } catch (InterruptedException | ExecutionException e) {
@@ -70,12 +71,10 @@ public class MultithreadedViolationConvertor {
         }
 
         service.shutdown();
-        while (!service.isTerminated()){
-            try {
-                Thread.sleep(1);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+        try {
+            service.awaitTermination(Long.MAX_VALUE, TimeUnit.MILLISECONDS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
 
         List<ViolationXML> violationXMLS = creatingAndSortingStatistics(violationJSONList).stream()
